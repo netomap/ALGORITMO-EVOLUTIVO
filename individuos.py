@@ -41,10 +41,16 @@ class Individuo():
         for k, (novos_pesos, novos_bias) in enumerate(nova_rede_neural):
             self.rede_neural.camadas[k] = (novos_pesos, novos_bias)
     
+    # def mutacao(self, fator=0.05):
+    #     for k, (peso, bias) in enumerate(self.rede_neural.camadas):
+    #         novo_peso = uniform(1-fator, 1+fator) * peso
+    #         novo_bias = uniform(1-fator, 1+fator) * bias
+    #         self.rede_neural.camadas[k] = (novo_peso, novo_bias)
+    
     def mutacao(self, fator=0.05):
         for k, (peso, bias) in enumerate(self.rede_neural.camadas):
-            novo_peso = uniform(1-fator, 1+fator) * peso
-            novo_bias = uniform(1-fator, 1+fator) * bias
+            novo_peso = (1 + np.random.uniform(-fator, fator, peso.shape)) * peso
+            novo_bias = (1 + np.random.uniform(-fator, fator, bias.shape)) * bias
             self.rede_neural.camadas[k] = (novo_peso, novo_bias)
 
 def test1():
