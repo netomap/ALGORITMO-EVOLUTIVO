@@ -1,5 +1,5 @@
 testes.ipynb
 __pycache__/
 logs/
-images/
-*.pk
+images/*
+!images/gif2.gif
