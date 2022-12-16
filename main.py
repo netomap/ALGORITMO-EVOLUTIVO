@@ -50,15 +50,16 @@ def criar_individuos(N_INDIVIDUOS, y0_individuos, individuo_padrao = None):
         
         novo_individuo = Individuo(id_, X0, Y0, W_INDIVIDUO, H_INDIVIDUO, DESLOCAMENTO_INDIVIDUO, [4+3, 4, 1], WINDOW_W, COR_ALEATORIA)
         
-        if (individuo_padrao and n < int(N_INDIVIDUOS/2)):
+        if (individuo_padrao and n <= int(N_INDIVIDUOS/2)):
             novo_individuo.herdar(individuo_padrao.rede_neural.camadas)
-            novo_individuo.mutacao(fator=MUTATION)
+            if (not(GET_WINNER)): novo_individuo.mutacao(fator=MUTATION)
 
         individuos.append(novo_individuo)
     
     return individuos
 
 def atualizacao_dados(individuos_, salvar_pesos = False):
+
     rebatidas = [individuo.rebatidas for individuo in individuos_ if individuo.ativa]
     individuos_ativas = len(rebatidas)
     max_rebatidas = max(rebatidas)
@@ -71,8 +72,9 @@ def atualizacao_dados(individuos_, salvar_pesos = False):
             str(melhor.rede_neural.camadas)
         )
 
-        with ('winner.pk', 'wb') as file:
-            pickle.dump(melhor, file)
+        arquivo = open('winner.pk', 'wb')
+        pickle.dump(melhor, arquivo)
+        arquivo.close()
         
     return f'Geração {GENERATION}, individuos ativas: {individuos_ativas}, rebatidas: {max_rebatidas}'
 
@@ -132,7 +134,7 @@ while (GENERATION <= GENERATION_MAX):
         colisoes = list(canvas.find_overlapping(x0, y0, x1, y1)) # objetos que colidem com as coordenadas da bola
         if len(colisoes) > 1: # se tiver mais de uma colisão, pois sempre terá uma lista de no mínimo valor 1 (posição da bola)
             DY = -1*DY
-            canvas.move(ball, 0, -5)
+            canvas.move(ball, 0, -DESLOCAMENTO_INDIVIDUO)
             for cada_individuo in individuos: # para cada individuo
                 if (cada_individuo.id not in colisoes):
                     cada_individuo.ativa = False
